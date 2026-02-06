@@ -2,8 +2,8 @@
 Contributors: wpcodefactory, omardabbas, karzin, anbinder, kousikmukherjeeli, aegkr
 Tags: EU VAT, UK VAT, tax, vat validation, VAT
 Requires at least: 6.1
-Tested up to: 6.8
-Stable tag: 4.5.1
+Tested up to: 6.9
+Stable tag: 4.5.7
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -285,6 +285,36 @@ Once activated, access the plugin's settings by navigating to the â€œWPFactoryâ€
 3. Start by visiting plugin settings at "WPFactory > EU VAT".
 
 == Changelog ==
+
+= 4.5.7 - 28/01/2026 =
+* Fix - Resolved VAT calculation issues in Block Checkout during only VAT number updates.
+* Fix - Corrected payment method visibility to appear only for valid VAT numbers.
+
+= 4.5.6 - 19/01/2026 =
+* Fix - Fixed VAT validation on country change in block-based checkout.
+* Dev - Checkout block field - Code refactoring, cleanup, and removing unused files.
+* Dev - Added `alg_wc_eu_vat_field_position_block_checkout` filter for VAT field positioning.
+
+= 4.5.5 - 04/01/2026 =
+* Fix - Fixed checkout country selection when "Keep VAT in selected/base country" is set to "Base (i.e., store) country".
+* Fix - Fixed PHP memory error in "woocommerce_get_country_locale" by removing an unnecessary "billing_company" check.
+* Dev - Added VAT validation when the "Ship to a different address" checkbox is toggled.
+* Dev - Code refactoring.
+* Dev - Coding standards improved.
+* Tested up to: 6.9.
+* WC tested up to: 10.4.
+
+= 4.5.4 - 20/11/2025 =
+* Fix - Resolved infinite loading issue on Cart block when "Add script dependency" option is enabled.
+* Fix - Ensured VAT field remains hidden on initial load when Company field is empty.
+
+= 4.5.3 - 11/11/2025 =
+* Fix - "On input" validates only the VAT field.
+* Fix - Removed required asterisk from VAT field when it changes to optional.
+* WC tested up to: 10.3.
+
+= 4.5.2 - 14/10/2025 =
+* Fix - Manual VAT number validation.
 
 = 4.5.1 - 24/09/2025 =
 * Dev - WPFactory Admin Menu - Library updated.

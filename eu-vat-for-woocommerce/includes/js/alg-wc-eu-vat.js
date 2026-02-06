@@ -1,7 +1,7 @@
 /**
  * EU VAT for WooCommerce - JS
  *
- * @version 4.5.0
+ * @version 4.5.6
  * @since   1.0.0
  *
  * @author  WPFactory
@@ -45,24 +45,22 @@ jQuery( function ( $ ) {
 		vat_paragraph.append( '<div id="alg_wc_eu_vat_details"></div>' );
 	}
 
+	// Show/hide by billing company
+	if ( alg_wc_eu_vat_ajax_object.do_show_hide_by_billing_company ) {
+		billing_company.on( 'input', show_hide_by_billing_company );
+		$( document.body ).one( 'updated_checkout', function () {
+			show_hide_by_billing_company();
+		} );
+	}
+
 	if ( 'yes_for_company' === alg_wc_eu_vat_ajax_object.is_required ) {
-		billing_company.blur( function () {
+		billing_company.on( 'input', function () {
 			is_company_name_not_empty();
 		} );
 
-		billing_company.on( 'input', function () {
-			clearTimeout( input_timer_company_require );
-			input_timer_company_require = setTimeout( alg_wc_eu_vat_require_on_company_fill, done_input_interval );
+		$( document.body ).one( 'updated_checkout', function () {
+			is_company_name_not_empty();
 		} );
-
-		clearTimeout( input_timer_company_load );
-		input_timer_company_load = setTimeout( alg_wc_eu_vat_require_on_company_fill, done_input_interval );
-	}
-
-	// Show/hide by billing company
-	if ( alg_wc_eu_vat_ajax_object.do_show_hide_by_billing_company ) {
-		show_hide_by_billing_company();
-		$( '#billing_company' ).on( 'change keyup paste', show_hide_by_billing_company );
 	}
 
 	// Initial validate
@@ -85,15 +83,11 @@ jQuery( function ( $ ) {
 	function show_hide_by_billing_company() {
 
 		if ( '' === $( '#billing_company' ).val() ) {
-
 			$( '#billing_eu_vat_number_field' ).hide();
 			$( '#billing_eu_vat_number' ).val( '' );
 			alg_wc_eu_vat_validate_vat();
-
 		} else {
-
 			$( '#billing_eu_vat_number_field' ).show();
-
 		}
 
 	}
@@ -201,7 +195,7 @@ jQuery( function ( $ ) {
 	/**
 	 * attach_event_handlers.
 	 *
-	 * @version 4.5.0
+	 * @version 4.5.5
 	 * @since   4.2.3
 	 */
 	function attach_event_handlers() {
@@ -212,7 +206,7 @@ jQuery( function ( $ ) {
 			'blur' :
 			'input'
 		);
-		$( document.body ).on( event_trigger, vat_input, function () {
+		$( document.body ).on( event_trigger, 'input[name="billing_eu_vat_number"]', function () {
 			block_checkout_section();
 			clearTimeout( input_timer );
 			input_timer = setTimeout( () => {
@@ -222,6 +216,11 @@ jQuery( function ( $ ) {
 
 		// On country change - re-validate
 		$( document.body ).on( 'change', '#billing_country, #shipping_country', function () {
+			alg_wc_eu_vat_validate_vat();
+		} );
+
+		// Ship to different address
+		$( document.body ).on( 'input', '#ship-to-different-address-checkbox', function () {
 			alg_wc_eu_vat_validate_vat();
 		} );
 
@@ -249,18 +248,9 @@ jQuery( function ( $ ) {
 	}
 
 	/**
-	 * alg_wc_eu_vat_require_on_company_fill.
-	 *
-	 * @todo    (dev) remove this (and use `is_company_name_not_empty()` directly)?
-	 */
-	function alg_wc_eu_vat_require_on_company_fill() {
-		is_company_name_not_empty();
-	}
-
-	/**
 	 * is_company_name_not_empty.
 	 *
-	 * @version 4.5.0
+	 * @version 4.5.3
 	 */
 	function is_company_name_not_empty() {
 		if ( '' !== billing_company.val() ) {
@@ -270,7 +260,14 @@ jQuery( function ( $ ) {
 			vat_input.addClass( 'field-required' );
 			vat_input_label.find( "span.optional" ).remove();
 			vat_input_label.find( "abbr" ).remove();
-			vat_input_label.append( '<abbr class="required" title="required">*</abbr>' );
+			vat_input_label.find( "span.required" ).show();
+
+			// Show required span only once
+			if ( vat_input_label.find( 'span.required' ).length === 0 ) {
+				vat_input_label.append( '<span class="required" aria-hidden="true">*</span>' );
+			} else {
+				vat_input_label.find( 'span.required' ).show();
+			}
 		} else {
 			vat_paragraph.removeClass( 'woocommerce-invalid' );
 			vat_paragraph.removeClass( 'woocommerce-validated' );
@@ -278,14 +275,18 @@ jQuery( function ( $ ) {
 			vat_input.removeClass( 'field-required' );
 			vat_input_label.find( "abbr" ).hide();
 			vat_input_label.find( "span.optional" ).remove();
-			vat_input_label.append( '<span class="optional">' + alg_wc_eu_vat_ajax_object.optional_text + '</span>' );
+			vat_input_label.find( "span.required" ).hide();
+
+			if ( vat_input_label.find( 'span.optional' ).length === 0 ) {
+				vat_input_label.append( '<span class="optional">' + alg_wc_eu_vat_ajax_object.optional_text + '</span>' );
+			}
 		}
 	}
 
 	/**
 	 * alg_wc_eu_vat_validate_vat.
 	 *
-	 * @version 4.5.0
+	 * @version 4.5.3
 	 * @since   1.0.0
 	 */
 	function alg_wc_eu_vat_validate_vat( load = false ) {
@@ -456,12 +457,12 @@ jQuery( function ( $ ) {
 							}
 						}
 					} else if ( alg_wc_eu_vat_ajax_object.status_codes['KEEP_VAT_COUNTRIES'] === response ) {
+						vat_paragraph.addClass( 'woocommerce-validated' );
 						vat_paragraph.removeClass( 'woocommerce-invalid' );
-						vat_paragraph.removeClass( 'woocommerce-validated' );
 						if ( 'yes' === alg_wc_eu_vat_ajax_object.add_progress_text ) {
-							progress_text.text( alg_wc_eu_vat_ajax_object.progress_text_validation_preserv );
+							progress_text.text( alg_wc_eu_vat_ajax_object.progress_text_valid );
 							progress_text.removeClass();
-							progress_text.addClass( 'alg-wc-eu-vat-validation-failed alg-wc-eu-vat-error-color' );
+							progress_text.addClass( 'alg-wc-eu-vat-valid alg-wc-eu-vat-valid-color' );
 						}
 					} else if ( alg_wc_eu_vat_ajax_object.status_codes['VIES_UNAVAILABLE'] === response ) {
 						vat_paragraph.removeClass( 'woocommerce-invalid' );
@@ -529,26 +530,3 @@ jQuery( function ( $ ) {
 	}
 
 } );
-
-/**
- * For VAT Blocks.
- *
- * Move VAT validation process message section into `wc-block-components-address-form__alg_eu_vat-billing_eu_vat_number`.
- *
- * @version 4.0.0
- * @since   3.0.1
- */
-// Wait for all resources to load
-window.onload = () => {
-	const sourceDiv = document.getElementById( 'alg_eu_vat_for_woocommerce_field' );
-	const targetDiv = document.querySelector( '.wc-block-components-address-form__alg_eu_vat-billing_eu_vat_number' );
-
-	// Check if both elements exist
-	if ( sourceDiv && targetDiv ) {
-		// Set margin-top style
-		sourceDiv.style.marginTop = '16px';
-
-		// Move the sourceDiv into the targetDiv
-		targetDiv.appendChild( sourceDiv ); // Append sourceDiv as a child of targetDiv
-	}
-};
