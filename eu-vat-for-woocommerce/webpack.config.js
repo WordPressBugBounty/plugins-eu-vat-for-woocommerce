@@ -1,78 +1,25 @@
-const path = require('path');
-const defaultConfig = require('@wordpress/scripts/config/webpack.config');
-const WooCommerceDependencyExtractionWebpackPlugin = require('@woocommerce/dependency-extraction-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-
-// Remove SASS rule from the default config so we can define our own.
-const defaultRules = defaultConfig.module.rules.filter((rule) => {
-	return String(rule.test) !== String(/\.(sc|sa)ss$/);
-});
+const defaultConfig = require( "@wordpress/scripts/config/webpack.config" );
+const path = require( "path" );
+const RemoveEmptyScriptsPlugin = require( "webpack-remove-empty-scripts" );
 
 module.exports = {
 	...defaultConfig,
 	entry: {
-		index: path.resolve(process.cwd(), 'src', 'js', 'index.js'),
-		'eu-vat-for-woocommerce-checkout-eu-vat-field-block': path.resolve(
-			process.cwd(),
-			'src',
-			'js',
-			'checkout-eu-vat-field-block',
-			'index.js'
-		),
-		'eu-vat-for-woocommerce-checkout-eu-vat-field-block-frontend':
-			path.resolve(
-				process.cwd(),
-				'src',
-				'js',
-				'checkout-eu-vat-field-block',
-				'frontend.js'
-			),
+		"js/wpfactory-wc-eu-vat": "./assets/js/wpfactory-wc-eu-vat.js",
+		"js/wpfactory-wc-eu-vat-confirmo": "./assets/js/wpfactory-wc-eu-vat-confirmo.js",
+		"js/wpfactory-wc-eu-vat-place-order": "./assets/js/wpfactory-wc-eu-vat-place-order.js",
+		"css/wpfactory-wc-eu-vat-confirmo": "./assets/css/wpfactory-wc-eu-vat-confirmo.css",
 	},
-	module: {
-		...defaultConfig.module,
-		rules: [
-			...defaultRules,
-			{
-				test: /\.(sc|sa)ss$/,
-				exclude: /node_modules/,
-				use: [
-					MiniCssExtractPlugin.loader,
-					{ loader: 'css-loader', options: { importLoaders: 1 } },
-					{
-						loader: 'sass-loader',
-						options: {
-							sassOptions: {
-								includePaths: ['src/css'],
-							},
-							additionalData: (content, loaderContext) => {
-								const { resourcePath, rootContext } =
-									loaderContext;
-								const relativePath = path.relative(
-									rootContext,
-									resourcePath
-								);
-
-								if (relativePath.startsWith('src/css/')) {
-									return content;
-								}
-
-								// Add code here to prepend to all .scss/.sass files.
-								return '@import "colors"; ' + content;
-							},
-						},
-					},
-				],
-			},
-		],
+	output: {
+		path: path.resolve( __dirname, "assets/build" ),
+		clean: true,
 	},
 	plugins: [
 		...defaultConfig.plugins.filter(
-			(plugin) =>
-				plugin.constructor.name !== 'DependencyExtractionWebpackPlugin'
+			( p ) =>
+				p.constructor.name !== "DependencyExtractionWebpackPlugin" // remove asset.php
+				&& p.constructor.name !== "RtlCssPlugin"  // remove rtl CSS
 		),
-		new WooCommerceDependencyExtractionWebpackPlugin(),
-		new MiniCssExtractPlugin({
-			filename: `[name].css`,
-		}),
+		new RemoveEmptyScriptsPlugin()
 	],
 };

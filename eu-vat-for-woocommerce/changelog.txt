@@ -1,27 +1,73 @@
 == Changelog ==
 
+= 4.7.2 - 12/07/2026 =
+* readme.txt improved.
+
+= 4.7.1 - 10/07/2026 =
+* Dev - Added plugin prefix to JavaScript object, AJAX action names, etc.
+
+= 4.7.0 - 01/07/2026 =
+* Dev - Prefixes updated (from `alg` to `wpfactory`).
+* Dev - Removed PHP sessions and used WooCommerce sessions only.
+* Dev - WPFactory Cross-Selling - Library updated (to v1.1.2).
+* Dev - WPFactory Admin Menu - Library updated (to v1.1.1).
+* WC tested up to: 10.9.
+
+= 4.6.7 - 05/06/2026 =
+* Dev - Security - Improved output escaping.
+* Dev - Security - Improved input sanitization.
+* Dev - Security - Added nonce verification.
+* Dev - Coding standards improved.
+
+= 4.6.6 - 28/05/2026 =
+* Fix - Fixed force VAT validation on cart/checkout page load and VAT recheck on checkout.
+* Dev - Validation - Advanced - VATSense.com API key - "Enable VATSense fallback" option added (defaults to "no").
+* Dev - Code refactoring and cleanup.
+* WC tested up to: 10.8.
+
+= 4.6.5 - 22/05/2026 =
+* Tested up to: 7.0.
+
+= 4.6.4 - 15/05/2026 =
+* Fix - Fixed company name autofill.
+* Dev - Moved JS/CSS files to assets directory.
+* Dev - Improved JS/CSS structure.
+
+= 4.6.3 - 12/05/2026 =
+* Fix - Block-based Checkout - Validate EU VAT number only when the field is present.
+* Dev - Improved VAT validation for checkout and related functions.
+* Dev - Code refactoring and cleanup.
+
+= 4.6.2 - 30/04/2026 =
+* Dev - Block-based Checkout - Added "Let customer decide" feature.
+* Dev - Block-based Checkout - Added "Confirmation notice" feature.
+* Dev - Block-based Checkout - Added "Valid VAT but still paying" feature.
+* Dev - WPFactory Cross-Selling - Library updated (to v1.1.0).
+* Dev - WPFactory Admin Menu - Library updated (to v1.1.0).
+* Dev - WPFactory Key Manager - Library updated (to v1.0.8).
+
 = 4.6.1 - 20/04/2026 =
 * Fix - Fixed visibility for the "Valid VAT but still paying" field based on visibility options.
 * WC tested up to: 10.7.
 
 = 4.6.0 - 08/04/2026 =
-* Fix - Fixed VAT recalculation when the VAT number is removed in Block-based Checkout.
-* Fix - Fixed VAT validation for manually pre-saved number in Block-based Checkout.
-* Fix - Fixed VAT validation when postal code or state values change in Block-based Checkout.
+* Fix - Block-based Checkout - Fixed VAT recalculation when the VAT number is removed.
+* Fix - Block-based Checkout - Fixed VAT validation for manually pre-saved number.
+* Fix - Block-based Checkout - Fixed VAT validation when postal code or state values change.
 * Dev - General - Confirmation notice - "Add CSS selector(s) for extra payment buttons..." option added (defaults to empty).
 * Deploy script updated.
 
 = 4.5.9 - 27/03/2026 =
-* Fix - Resolved issue with "Keep VAT for this product" in Block-based Checkout.
+* Fix - Block-based Checkout - Resolved issue with "Keep VAT for this product".
 * Dev - Improvement Block-based VAT validation.
 * WC tested up to: 10.6.
 
 = 4.5.8 - 24/02/2026 =
 * Fix - Fixed initial show/hide behavior of the VAT field when the company name is checked.
 * Fix - Corrected the "Country preserved" message.
-* Fix - Resolved VAT number field visibility issues in Block-based Checkout.
-* Fix - Fixed VAT number required-field handling in Block-based Checkout.
-* Fix - Corrected VAT number validation in Block-based Checkout.
+* Fix - Block-based Checkout - Resolved VAT number field visibility issues.
+* Fix - Block-based Checkout - Fixed VAT number required-field handling.
+* Fix - Block-based Checkout - Corrected VAT number validation.
 * WC tested up to: 10.5.
 
 = 4.5.7 - 28/01/2026 =

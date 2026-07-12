@@ -2,8 +2,8 @@
 Contributors: wpcodefactory, omardabbas, karzin, anbinder, kousikmukherjeeli, aegkr
 Tags: EU VAT, UK VAT, tax, vat validation, VAT
 Requires at least: 6.1
-Tested up to: 6.9
-Stable tag: 4.6.1
+Tested up to: 7.0
+Stable tag: 4.7.2
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -243,6 +243,118 @@ WPFactory has a diverse range of plugins tailored to enhance your experience, so
 
 > “Great support!: The plugin works great, and does everything I need for selling to other countries in Europe! Support is great and they help develop new features to make the plugin even more compliant with the laws.” – ⭐⭐⭐⭐⭐ [kingwebshops](https://wordpress.org/support/topic/great-support-4410/)
 
+= Feedback =
+
+* We are open to your suggestions and feedback. Thank you for using or trying out one of our plugins!
+* [Visit plugin site](https://wpfactory.com/item/eu-vat-for-woocommerce/).
+
+== Frequently Asked Questions ==
+
+= Source Code =
+
+The complete source code and build tools for this plugin are available at:
+
+https://github.com/wpcodefactory/eu-vat-for-woocommerce
+
+The source files used to generate the compiled assets are located in:
+
+* JavaScript source files: `assets/js/`
+* CSS source files: `assets/css/`
+* Checkout block source files: `includes/blocks/src/`
+
+Compiled production assets are located in:
+
+* `assets/build/`
+* `includes/blocks/build/`
+
+= Build & Development =
+
+The JavaScript and CSS files in the `assets/build/` directory are generated from the source files in `assets/js/` and `assets/css/` using WordPress Scripts and Webpack.
+
+The Checkout block assets in `includes/blocks/build/` are generated from `includes/blocks/src/` using WordPress Scripts and Webpack.
+
+**Build Tools:**
+
+* Node.js and npm
+* @wordpress/scripts
+* Webpack
+
+**Building the plugin from source:**
+
+1. Install dependencies:
+
+`npm install`
+
+2. Build production assets:
+
+`npm run build`
+
+3. Watch for development changes:
+
+`npm start`
+
+4. Build checkout block assets (from `includes/blocks/`):
+
+`cd includes/blocks && npm install && npm run build`
+
+= External Services =
+
+This plugin connects to external services to validate VAT numbers. Validation requests are only made when a VAT number is checked through the plugin's features, for example during checkout, signup/account validation, admin order validation, or manual validation actions.
+
+**European Commission VIES (VAT Information Exchange System)**
+
+This service is used to validate EU VAT numbers. Depending on your plugin settings and server capabilities, the plugin may connect to the VIES REST API and/or the VIES SOAP service.
+
+API domain and endpoints used by the plugin:
+
+* `ec.europa.eu`
+* REST API: `https://ec.europa.eu/taxation_customs/vies/rest-api/ms/{country_code}/vat/{vat_number}`
+* SOAP WSDL: `https://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl`
+
+Data sent to VIES:
+
+* The VAT country code and VAT number being validated.
+* If the optional "Request identifier" feature is enabled, the requester country code and requester VAT number configured in the plugin settings.
+
+When data is sent:
+
+* When a customer enters a VAT number and the plugin validates it;
+* When an admin validates a VAT number from the WooCommerce admin;
+* When the plugin re-validates a VAT number after relevant checkout data changes.
+
+Service provider: European Commission
+
+* Service information: https://ec.europa.eu/taxation_customs/vies/
+* Legal notice / terms: https://commission.europa.eu/legal-notice_en
+* Privacy policy: https://commission.europa.eu/privacy-policy-websites-managed-european-commission_en
+
+**VATSense**
+
+This service is used to validate supported VAT/tax numbers outside the EU and can also be used as an optional fallback validator when enabled in the plugin settings.
+
+API domain and endpoint used by the plugin:
+
+* `api.vatsense.com`
+* API endpoint: `https://api.vatsense.com/1.0/validate?vat_number={country_code}{vat_number}`
+
+Data sent to VATSense:
+
+* The VAT number being validated, including its country code;
+* The site administrator configured VATSense API key, sent in the request authorization header.
+
+When data is sent:
+
+* When the plugin validates a supported non-EU VAT/tax number;
+* When the optional VATSense fallback is enabled and the plugin falls back to VATSense for validation.
+
+Service provider: VATSense
+
+* Documentation: https://vatsense.com/documentation
+* Terms of service: https://vatsense.com/terms
+* Privacy policy: https://vatsense.com/privacy
+
+The plugin only sends VAT-related information required to perform validation requests. It does not send unrelated customer information.
+
 == Installation ==
 
 **Follow these simplified steps to get your plugin up and running:**
@@ -273,11 +385,6 @@ Once activated, access the plugin's settings by navigating to the “WPFactory�
 2. Validation & Progress
 3. Admin settings & Advanced options
 
-= Feedback =
-
-* We are open to your suggestions and feedback. Thank you for using or trying out one of our plugins!
-* [Visit plugin site](https://wpfactory.com/item/eu-vat-for-woocommerce/).
-
 == Installation ==
 
 1. Upload the entire plugin folder to the `/wp-content/plugins/` directory.
@@ -286,28 +393,74 @@ Once activated, access the plugin's settings by navigating to the “WPFactory�
 
 == Changelog ==
 
+= 4.7.2 - 12/07/2026 =
+* readme.txt improved.
+
+= 4.7.1 - 10/07/2026 =
+* Dev - Added plugin prefix to JavaScript object, AJAX action names, etc.
+
+= 4.7.0 - 01/07/2026 =
+* Dev - Prefixes updated (from `alg` to `wpfactory`).
+* Dev - Removed PHP sessions and used WooCommerce sessions only.
+* Dev - WPFactory Cross-Selling - Library updated (to v1.1.2).
+* Dev - WPFactory Admin Menu - Library updated (to v1.1.1).
+* WC tested up to: 10.9.
+
+= 4.6.7 - 05/06/2026 =
+* Dev - Security - Improved output escaping.
+* Dev - Security - Improved input sanitization.
+* Dev - Security - Added nonce verification.
+* Dev - Coding standards improved.
+
+= 4.6.6 - 28/05/2026 =
+* Fix - Fixed force VAT validation on cart/checkout page load and VAT recheck on checkout.
+* Dev - Validation - Advanced - VATSense.com API key - "Enable VATSense fallback" option added (defaults to "no").
+* Dev - Code refactoring and cleanup.
+* WC tested up to: 10.8.
+
+= 4.6.5 - 22/05/2026 =
+* Tested up to: 7.0.
+
+= 4.6.4 - 15/05/2026 =
+* Fix - Fixed company name autofill.
+* Dev - Moved JS/CSS files to assets directory.
+* Dev - Improved JS/CSS structure.
+
+= 4.6.3 - 12/05/2026 =
+* Fix - Block-based Checkout - Validate EU VAT number only when the field is present.
+* Dev - Improved VAT validation for checkout and related functions.
+* Dev - Code refactoring and cleanup.
+
+= 4.6.2 - 30/04/2026 =
+* Dev - Block-based Checkout - Added "Let customer decide" feature.
+* Dev - Block-based Checkout - Added "Confirmation notice" feature.
+* Dev - Block-based Checkout - Added "Valid VAT but still paying" feature.
+* Dev - WPFactory Cross-Selling - Library updated (to v1.1.0).
+* Dev - WPFactory Admin Menu - Library updated (to v1.1.0).
+* Dev - WPFactory Key Manager - Library updated (to v1.0.8).
+
 = 4.6.1 - 20/04/2026 =
 * Fix - Fixed visibility for the "Valid VAT but still paying" field based on visibility options.
 * WC tested up to: 10.7.
 
 = 4.6.0 - 08/04/2026 =
-* Fix - Fixed VAT recalculation when the VAT number is removed in Block-based Checkout.
-* Fix - Fixed VAT validation for manually pre-saved number in Block-based Checkout.
-* Fix - Fixed VAT validation when postal code or state values change in Block-based Checkout.
+* Fix - Block-based Checkout - Fixed VAT recalculation when the VAT number is removed.
+* Fix - Block-based Checkout - Fixed VAT validation for manually pre-saved number.
+* Fix - Block-based Checkout - Fixed VAT validation when postal code or state values change.
 * Dev - General - Confirmation notice - "Add CSS selector(s) for extra payment buttons..." option added (defaults to empty).
 * Deploy script updated.
 
 = 4.5.9 - 27/03/2026 =
-* Fix - Resolved issue with "Keep VAT for this product" in Block-based Checkout.
+* Fix - Block-based Checkout - Resolved issue with "Keep VAT for this product".
 * Dev - Improvement Block-based VAT validation.
 * WC tested up to: 10.6.
 
 = 4.5.8 - 24/02/2026 =
 * Fix - Fixed initial show/hide behavior of the VAT field when the company name is checked.
 * Fix - Corrected the "Country preserved" message.
-* Fix - Resolved VAT number field visibility issues in Block-based Checkout.
-* Fix - Fixed VAT number required-field handling in Block-based Checkout.
-* Fix - Corrected VAT number validation in Block-based Checkout.
+* Fix - Block-based Checkout - Resolved VAT number field visibility issues.
+* Fix - Block-based Checkout - Fixed VAT number required-field handling.
+* Fix - Block-based Checkout - Corrected VAT number validation.
 * WC tested up to: 10.5.
 
 = 4.5.7 - 28/01/2026 =
@@ -536,71 +689,6 @@ Once activated, access the plugin's settings by navigating to the “WPFactory�
 * Dev - Admin settings descriptions updated.
 * Dev - Major code refactoring and cleanup.
 * Dev - Coding standards improved.
-
-= 3.2.4 - 10/01/2025 =
-* Fix - Checkout block field - Default value fixed.
-
-= 3.2.3 - 07/01/2025 =
-* Fix - When the "Admin > Checkout block field" option was enabled, the EU VAT field was hidden on the admin order edit page.
-
-= 3.2.2 - 31/12/2024 =
-* Fix - Show field for selected user roles only.
-
-= 3.2.1 - 29/12/2024 =
-* Dev - Code refactoring and cleanup.
-
-= 3.2.0 - 28/12/2024 =
-* Fix - "High-Performance Order Storage (HPOS)" compatibility.
-* Dev - Code refactoring.
-
-= 3.1.6 - 27/12/2024 =
-* Dev - Compatibility - WPML/Polylang - `wpml-config.xml` file added.
-* Dev - Composer - `autoloader-suffix` param added.
-* Dev - Key Manager - Library updated.
-* WC tested up to: 9.5.
-
-= 3.1.5 - 26/11/2024 =
-* Fix - VAT validation issue on block checkout.
-* Fix - Enable/disable progress messages.
-
-= 3.1.4 - 16/11/2024 =
-* Fix - VAT error message not disappearing after company name update.
-* Dev - Code refactoring and cleanup.
-
-= 3.1.3 - 15/11/2024 =
-* Plugin name updated (was "EU/UK VAT Manager for WooCommerce").
-
-= 3.1.2 - 14/11/2024 =
-* Fix - Missing library files uploaded.
-* Tested up to: 6.7.
-* WC tested up to: 9.4.
-
-= 3.1.1 - 09/11/2024 =
-* Dev - Initializing the plugin on the `plugins_loaded` action.
-* Dev - Code refactoring.
-
-= 3.1.0 - 08/11/2024 =
-* Dev - Plugin settings moved to the "WPFactory" menu.
-* Dev - "Recommendations" added.
-* Dev - "Key Manager" added.
-* Dev - Code refactoring and cleanup.
-
-= 3.0.1 - 30/10/2024 =
-* Fix - Adjusted the VAT validation message location during account creation.
-* Fix - Resolved localization shortcode {billing_eu_vat_number} issue in the block checkout.
-* Fix - Resolved error "Function get_cart was called incorrectly".
-* Dev - Code cleanup.
-
-= 3.0.0 - 23/10/2024 =
-* Fix - Localization issue.
-* Fix - Tax calculation on country change.
-* Fix - Cross-Site Request Forgery vulnerability.
-* Dev - Keep VAT for specific products.
-* Dev - General - "Enable plugin" option removed.
-* Dev - Admin settings descriptions updated.
-* Dev - Code refactoring and cleanup.
-* WC tested up to: 9.3.
-* WooCommerce added to the "Requires Plugins" (plugin header).
 
 [See changelog for all versions](https://plugins.svn.wordpress.org/eu-vat-for-woocommerce/trunk/changelog.txt).
 
